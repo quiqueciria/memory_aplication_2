@@ -1,3 +1,5 @@
-import "./style.css";
+const imgElement = document.getElementById("imgLeon") as HTMLImageElement;
 
-console.log("Hello Typescript!");
+imgElement.addEventListener("click", () => {
+  imgElement.src = "/src/imgs/2.png";
+});
