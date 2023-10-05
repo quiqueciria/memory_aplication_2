@@ -1,18 +1,6 @@
 import { infoCartas } from "./datos";
 import { InfoCarta } from "./modelo";
 
-// const imgElement = document.getElementById("leon") as HTMLImageElement;
-
-// imgElement.addEventListener("click", () => {
-//   imgElement.src = "/src/imgs/2.png";
-// });
-
-// const imgElementGato = document.getElementById("gato") as HTMLImageElement;
-
-// imgElementGato.addEventListener("click", () => {
-//   imgElementGato.src = "/src/imgs/3.png";
-// });
-
 document.addEventListener("DOMContentLoaded", () => {
   pintarListaAnimales(infoCartas);
 });
@@ -23,20 +11,53 @@ const crearContenedor = (nombreClase: string): HTMLDivElement => {
   listaAnimales.id = nombreClase;
   return listaAnimales;
 };
+// Barajar el array cartas:InfoCarta
+const barajarCartas = (cartas: InfoCarta[]) => {
+  let arrayCopy = [...cartas];
+  for (let i = arrayCopy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arrayCopy[i], arrayCopy[j]] = [arrayCopy[j], arrayCopy[i]];
+  }
+  return arrayCopy;
+};
 
+// Elegir el div del html
 const pintarListaAnimales = (listaAnimales: InfoCarta[]): void => {
   const appDiv = document.getElementById("principal");
+  // Crear el container dentro del div
   if (appDiv && appDiv instanceof HTMLDivElement) {
     const crearDivAnimales = crearContenedor("Animales");
     appDiv.appendChild(crearDivAnimales);
-    listaAnimales.forEach((animal) => {
+
+    // Le asignamos el array listaAnimales a una costante para pasarle el método forEach
+    const cartasBarajadas = barajarCartas(listaAnimales);
+
+    // Recorrer el array y crear el div por cada animal
+    cartasBarajadas.forEach((animal) => {
       const divAnimal = crearContenedor("animal");
-      divAnimal.innerHTML = `<img src="${animal.imagen}" />`;
       divAnimal.className = "grid-item";
       divAnimal.id = `${animal.idFoto}`;
+
+      // Asignar el evento de click
+      divAnimal.addEventListener("click", () => {
+        divAnimal.innerHTML = `<img src="${animal.imagen}" />`;
+      });
+
+      // Asignárselo al contenedor
       crearDivAnimales.appendChild(divAnimal);
     });
   } else {
     console.error("No se encontro el elemento");
   }
 };
+
+// Reset tablero
+
+// Botón iniciar partida
+const botonInciar = document.getElementById("iniciarPartidaButton");
+
+if (botonInciar) {
+  botonInciar.addEventListener("click", () => {
+    console.log("funciona!"), pintarListaAnimales;
+  });
+}
