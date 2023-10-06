@@ -1,8 +1,7 @@
-import { infoCartas } from "./datos";
-import { InfoCarta } from "./modelo";
+import { Carta, cartas } from "./modelo";
 
 document.addEventListener("DOMContentLoaded", () => {
-  pintarListaAnimales(infoCartas);
+  pintarListaAnimales(cartas);
 });
 
 const crearContenedor = (nombreClase: string): HTMLDivElement => {
@@ -12,7 +11,7 @@ const crearContenedor = (nombreClase: string): HTMLDivElement => {
   return listaAnimales;
 };
 // Barajar el array cartas:InfoCarta
-const barajarCartas = (cartas: InfoCarta[]) => {
+const barajarCartas = (cartas: Carta[]) => {
   let arrayCopy = [...cartas];
   for (let i = arrayCopy.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -22,18 +21,18 @@ const barajarCartas = (cartas: InfoCarta[]) => {
 };
 
 // Elegir el div del html
-const pintarListaAnimales = (listaAnimales: InfoCarta[]): void => {
+const pintarListaAnimales = (listaAnimales: Carta[]): void => {
   const appDiv = document.getElementById("principal");
   // Crear el container dentro del div
   if (appDiv && appDiv instanceof HTMLDivElement) {
     const crearDivAnimales = crearContenedor("Animales");
     appDiv.appendChild(crearDivAnimales);
 
-    // Le asignamos el array listaAnimales a una costante para pasarle el método forEach
-    const cartasBarajadas = barajarCartas(listaAnimales);
+    // // Le asignamos el array listaAnimales a una costante para pasarle el método forEach
+    // const cartasBarajadas = barajarCartas(listaAnimales);
 
     // Recorrer el array y crear el div por cada animal
-    cartasBarajadas.forEach((animal) => {
+    listaAnimales.forEach((animal) => {
       const divAnimal = crearContenedor("animal");
       divAnimal.className = "grid-item";
       divAnimal.id = `${animal.idFoto}`;
@@ -51,6 +50,11 @@ const pintarListaAnimales = (listaAnimales: InfoCarta[]): void => {
   }
 };
 
+const iniciarPartida = () => {
+  const cartasBarajadas: Carta[] = barajarCartas(cartas);
+  console.log(cartasBarajadas);
+};
+
 // Reset tablero
 
 // Botón iniciar partida
@@ -58,6 +62,7 @@ const botonInciar = document.getElementById("iniciarPartidaButton");
 
 if (botonInciar) {
   botonInciar.addEventListener("click", () => {
-    console.log("funciona!"), pintarListaAnimales;
+    // console.log("funciona!"), pintarListaAnimales();
+    iniciarPartida();
   });
 }
