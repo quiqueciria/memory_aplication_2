@@ -1,10 +1,23 @@
 export interface Carta {
-  idFoto: number; // id del 1 al 6 para 12 cartas, así identificamos rápido si es un gatito ,un perrito...
-  // el ID se repete 2 veces en el array de cartas (hay dos cartas de un perro, hay dos cartas de un gato)
-  imagen: string; // por comodidad repetimos la url de la imagen
+  idFoto: number;
+  imagen: string;
   estaVuelta: boolean;
   encontrada: boolean;
 }
+
+export interface Tablero {
+  cartas: Carta[];
+  estadoPartida: EstadoPartida;
+  indiceCartaVolteadaA?: number;
+  indiceCartaVolteadaB?: number;
+}
+
+type EstadoPartida =
+  | "PartidaNoIniciada"
+  | "CeroCartasLevantadas"
+  | "UnaCartaLevantada"
+  | "DosCartasLevantadas"
+  | "PartidaCompleta";
 
 const crearCartaInicial = (Carta: InfoCarta): Carta => {
   return {
@@ -12,6 +25,13 @@ const crearCartaInicial = (Carta: InfoCarta): Carta => {
     imagen: Carta.imagen,
     estaVuelta: false,
     encontrada: false,
+  };
+};
+
+const crearTableroInicial = (): Tablero => {
+  return {
+    cartas: cartas,
+    estadoPartida: "PartidaNoIniciada",
   };
 };
 
@@ -58,3 +78,5 @@ const infoCartas: InfoCarta[] = [
 ];
 
 export let cartas: Carta[] = crearColeccionDeCartasInicial(infoCartas);
+
+export let tablero: Tablero = crearTableroInicial();
