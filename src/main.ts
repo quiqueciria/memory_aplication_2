@@ -46,10 +46,13 @@ const pintarTablero = (listaAnimales: Carta[]): void => {
     appDiv.appendChild(crearDivAnimales);
 
     // Recorrer el array y crear el div por cada animal
-    listaAnimales.forEach((animal) => {
+    listaAnimales.forEach((animal, index) => {
       const divAnimal = crearContenedor("animal");
       divAnimal.className = "grid-item";
-      divAnimal.id = `${animal.idFoto}`;
+      divAnimal.id = `${index}`;
+      // Averiguar el ID de cada carta
+      const idElemento = divAnimal.id;
+
       // Dar la vuelta a la primera carta y cambiar el estado
       const darLaVueltaALaPrimeraCarta = (tablero: any, idElemento: string) => {
         tablero.estadoPartida = "UnaCartaLevantada";
@@ -58,7 +61,7 @@ const pintarTablero = (listaAnimales: Carta[]): void => {
       // dar la vuelta a la segunda carta y cambiar el estado
       const darLaVueltaALaSegundaCarta = (tablero: any, idElemento: string) => {
         tablero.estadoPartida = "DosCartasLevantadas";
-        tablero.indiceCartaVolteadaA = idElemento;
+        tablero.indiceCartaVolteadaB = idElemento;
       };
       // consultar el estado de la partida si es la primera carta
       const esLaPrimeraCarta = (tablero: any): boolean =>
@@ -66,20 +69,38 @@ const pintarTablero = (listaAnimales: Carta[]): void => {
       // consultar el estado de la partida si es la segunda carta
       const esLaSegundaCarta = (tablero: any): boolean =>
         tablero.estadoPartida === "UnaCartaLevantada";
+      // Establecer estado de la primera carta (no de la partida!!)
+      const estaDeVuelta = (cartas: any): boolean => (cartas.estaVuelta = true);
+      // Establecer estado de la segunda carta (no de la partida!!)
+      const estaEncontrada = (cartas: any): boolean =>
+        (cartas.encontrada = true);
+      const indiceCartaA = tablero.indiceCartaVolteadaA;
+      const indiceCartaB = tablero.indiceCartaVolteadaB;
 
       // Asignar el evento de click
       divAnimal.addEventListener("click", () => {
         if (tablero.estadoPartida !== "PartidaNoIniciada") {
           divAnimal.innerHTML = `<img src="${animal.imagen}" />`;
-          // Averiguar el ID de cada carta
-          const idElemento = divAnimal.id;
+          // ver si está sacando el ID elemento
+          console.log(idElemento);
           // pregunto si es la primera o la segunda.
           if (esLaPrimeraCarta(tablero)) {
             darLaVueltaALaPrimeraCarta(tablero, idElemento);
-            console.log(darLaVueltaALaPrimeraCarta);
+            estaDeVuelta(cartas);
+            console.log(estaDeVuelta(cartas));
           } else if (esLaSegundaCarta(tablero)) {
             darLaVueltaALaSegundaCarta(tablero, idElemento);
-            console.log(darLaVueltaALaSegundaCarta);
+            if (indiceCartaA !== undefined && indiceCartaB !== undefined) {
+              if (
+                tablero.cartas[indiceCartaA].idFoto ===
+                tablero.cartas[indiceCartaB].idFoto
+              ) {
+                console.log(cartas);
+                console.log("He entrado");
+                estaEncontrada(cartas);
+                console.log(estaEncontrada(cartas));
+              }
+            }
           }
         }
       });
