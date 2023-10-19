@@ -70,36 +70,44 @@ const pintarTablero = (listaAnimales: Carta[]): void => {
       const esLaSegundaCarta = (tablero: any): boolean =>
         tablero.estadoPartida === "UnaCartaLevantada";
       // Establecer estado de la primera carta (no de la partida!!)
-      const estaDeVuelta = (cartas: any): boolean => (cartas.estaVuelta = true);
+      const estaDeVuelta = (cartas: any) => {
+        cartas.estaDeVuelta = true;
+      };
       // Establecer estado de la segunda carta (no de la partida!!)
-      const estaEncontrada = (cartas: any): boolean =>
-        (cartas.encontrada = true);
-      const indiceCartaA = tablero.indiceCartaVolteadaA;
-      const indiceCartaB = tablero.indiceCartaVolteadaB;
-
+      const estaEncontrada = (cartas: any) => {
+        cartas.encontrada = true;
+      };
       // Asignar el evento de click
       divAnimal.addEventListener("click", () => {
         if (tablero.estadoPartida !== "PartidaNoIniciada") {
           divAnimal.innerHTML = `<img src="${animal.imagen}" />`;
-          // ver si está sacando el ID elemento
-          console.log(idElemento);
+
           // pregunto si es la primera o la segunda.
           if (esLaPrimeraCarta(tablero)) {
             darLaVueltaALaPrimeraCarta(tablero, idElemento);
             estaDeVuelta(cartas);
-            console.log(estaDeVuelta(cartas));
           } else if (esLaSegundaCarta(tablero)) {
             darLaVueltaALaSegundaCarta(tablero, idElemento);
-            if (indiceCartaA !== undefined && indiceCartaB !== undefined) {
-              if (
-                tablero.cartas[indiceCartaA].idFoto ===
-                tablero.cartas[indiceCartaB].idFoto
-              ) {
-                console.log(cartas);
-                console.log("He entrado");
-                estaEncontrada(cartas);
-                console.log(estaEncontrada(cartas));
-              }
+          }
+          const indiceCartaA = tablero.indiceCartaVolteadaA;
+          const indiceCartaB = tablero.indiceCartaVolteadaB;
+
+          if (indiceCartaA !== undefined && indiceCartaB !== undefined) {
+            if (
+              tablero.cartas[indiceCartaA].idFoto ===
+              tablero.cartas[indiceCartaB].idFoto
+            ) {
+              console.log("Es pareja");
+              estaEncontrada(cartas);
+              tablero.indiceCartaVolteadaA = undefined;
+              tablero.indiceCartaVolteadaB = undefined;
+              tablero.estadoPartida = "CeroCartasLevantadas";
+              // Se queden fijas las cartas
+            } else {
+              tablero.indiceCartaVolteadaA = undefined;
+              tablero.indiceCartaVolteadaB = undefined;
+              tablero.estadoPartida = "CeroCartasLevantadas";
+              // Se de la vuelta las cartas
             }
           }
         }
