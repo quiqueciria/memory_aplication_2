@@ -69,6 +69,7 @@ const pintarTablero = (listaAnimales: Carta[]): void => {
       // consultar el estado de la partida si es la segunda carta
       const esLaSegundaCarta = (tablero: any): boolean =>
         tablero.estadoPartida === "UnaCartaLevantada";
+
       // Establecer estado de la primera carta (no de la partida!!)
       const estaDeVuelta = (cartas: any) => {
         cartas.estaDeVuelta = true;
@@ -97,17 +98,31 @@ const pintarTablero = (listaAnimales: Carta[]): void => {
               tablero.cartas[indiceCartaA].idFoto ===
               tablero.cartas[indiceCartaB].idFoto
             ) {
-              console.log("Es pareja");
+              console.log("Son pareja");
               estaEncontrada(cartas);
               tablero.indiceCartaVolteadaA = undefined;
               tablero.indiceCartaVolteadaB = undefined;
               tablero.estadoPartida = "CeroCartasLevantadas";
-              // Se queden fijas las cartas
+              // Se quedan fijas las cartas
             } else {
               tablero.indiceCartaVolteadaA = undefined;
               tablero.indiceCartaVolteadaB = undefined;
               tablero.estadoPartida = "CeroCartasLevantadas";
-              // Se de la vuelta las cartas
+              tablero.cartas.forEach((carta, indice) => {
+                // dejo vacíos los divs
+                if (tablero.cartas[indice].encontrada == false) {
+                  console.log("le doy la vuelta");
+                  const divCarta = document.getElementById(`${indice}`);
+                  if (
+                    divCarta !== undefined &&
+                    divCarta !== null &&
+                    divCarta instanceof HTMLDivElement
+                  ) {
+                    divCarta.innerHTML = "";
+                    console.log(cartas);
+                  }
+                }
+              });
             }
           }
         }
