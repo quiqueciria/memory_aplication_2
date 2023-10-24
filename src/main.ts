@@ -51,15 +51,15 @@ const pintarTablero = (listaAnimales: Carta[]): void => {
       divAnimal.className = "grid-item";
       divAnimal.id = `${index}`;
       // Averiguar el ID de cada carta
-      const idElemento = divAnimal.id;
+      // const idElemento = divAnimal.id;
 
       // Dar la vuelta a la primera carta y cambiar el estado
-      const darLaVueltaALaPrimeraCarta = (tablero: any, idElemento: string) => {
+      const darLaVueltaALaPrimeraCarta = (tablero: any, idElemento: number) => {
         tablero.estadoPartida = "UnaCartaLevantada";
         tablero.indiceCartaVolteadaA = idElemento;
       };
       // dar la vuelta a la segunda carta y cambiar el estado
-      const darLaVueltaALaSegundaCarta = (tablero: any, idElemento: string) => {
+      const darLaVueltaALaSegundaCarta = (tablero: any, idElemento: number) => {
         tablero.estadoPartida = "DosCartasLevantadas";
         tablero.indiceCartaVolteadaB = idElemento;
       };
@@ -71,13 +71,13 @@ const pintarTablero = (listaAnimales: Carta[]): void => {
         tablero.estadoPartida === "UnaCartaLevantada";
 
       // Establecer estado de la primera carta (no de la partida!!)
-      const estaDeVuelta = (cartas: any) => {
-        cartas.estaDeVuelta = true;
+      const estaDeVuelta = (cartas: Carta) => {
+        cartas.estaVuelta = true;
       };
-      // Establecer estado de la segunda carta (no de la partida!!)
-      const estaEncontrada = (cartas: any) => {
-        cartas.encontrada = true;
-      };
+      // Establecer estado de la segunda carta (no de la partida!!) (lo he quitado despues de lo de la 102)
+      // const estaEncontrada = (cartas: Carta) => {
+      //   cartas.encontrada = true;
+      // };
       // Asignar el evento de click
       divAnimal.addEventListener("click", () => {
         if (tablero.estadoPartida !== "PartidaNoIniciada") {
@@ -85,10 +85,10 @@ const pintarTablero = (listaAnimales: Carta[]): void => {
 
           // pregunto si es la primera o la segunda.
           if (esLaPrimeraCarta(tablero)) {
-            darLaVueltaALaPrimeraCarta(tablero, idElemento);
-            estaDeVuelta(cartas);
+            darLaVueltaALaPrimeraCarta(tablero, index);
+            estaDeVuelta(tablero.cartas[index]);
           } else if (esLaSegundaCarta(tablero)) {
-            darLaVueltaALaSegundaCarta(tablero, idElemento);
+            darLaVueltaALaSegundaCarta(tablero, index);
           }
           const indiceCartaA = tablero.indiceCartaVolteadaA;
           const indiceCartaB = tablero.indiceCartaVolteadaB;
@@ -99,12 +99,19 @@ const pintarTablero = (listaAnimales: Carta[]): void => {
               tablero.cartas[indiceCartaB].idFoto
             ) {
               console.log("Son pareja");
-              estaEncontrada(cartas);
+              tablero.cartas[indiceCartaA].encontrada = true;
+              tablero.cartas[indiceCartaA].estaVuelta = true;
+              tablero.cartas[indiceCartaB].encontrada = true;
+              tablero.cartas[indiceCartaB].estaVuelta = true;
               tablero.indiceCartaVolteadaA = undefined;
               tablero.indiceCartaVolteadaB = undefined;
               tablero.estadoPartida = "CeroCartasLevantadas";
               // Se quedan fijas las cartas
             } else {
+              tablero.cartas[indiceCartaA].encontrada = false;
+              tablero.cartas[indiceCartaA].estaVuelta = false;
+              tablero.cartas[indiceCartaB].encontrada = false;
+              tablero.cartas[indiceCartaB].estaVuelta = false;
               tablero.indiceCartaVolteadaA = undefined;
               tablero.indiceCartaVolteadaB = undefined;
               tablero.estadoPartida = "CeroCartasLevantadas";
@@ -136,12 +143,28 @@ const pintarTablero = (listaAnimales: Carta[]): void => {
   }
 };
 
+// Reiniciar el tablero completo
+const resetearTablero = () => {
+  tablero.cartas = [
+    ...tablero.cartas.map((carta) => ({
+      ...carta,
+      encontrada: false,
+      estaVuelta: false,
+    })),
+  ];
+  tablero.indiceCartaVolteadaA = undefined;
+  tablero.indiceCartaVolteadaB = undefined;
+  tablero.estadoPartida = "CeroCartasLevantadas";
+};
+
 // Botón iniciar partida
 const botonIniciar = document.getElementById("iniciarPartidaButton");
 
 if (botonIniciar) {
   botonIniciar.addEventListener("click", () => {
     iniciarPartida();
+    resetearTablero();
+    console.log(tablero);
     pintarTablero(tablero.cartas);
   });
 }
